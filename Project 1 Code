@@ -1,0 +1,46 @@
+%% GROUP 8 / PROJECT 1 
+
+angleAlpha=85;
+angleLambda=41;
+A=deg2rad(angleAlpha);
+Y=deg2rad(angleLambda);
+fprintf('\n alpha=%g deg.\n', angleAlpha);
+fprintf('\n lambda=%g deg.\n', angleLambda);
+
+syms C_3__NC(alpha) C_2__CB(lambda) r_vec__N r_vec__B v_vec__N v_vec__B
+
+Position_in_frame_B=r_vec__B
+r_B=[6883;1642;4736]
+disp('km')
+disp(' ')
+
+Velocity_in_frame_B=v_vec__B
+v_B=[3.5;0.3;-2.8]
+disp('km/s')
+disp(' ')
+
+rotation_1=C_3__NC(alpha)
+C_3NC=[cos(A) sin(A) 0 ;-sin(A) cos(A) 0;0 0 1]
+disp(' ')
+
+rotation_2=C_2__CB(lambda)
+C_2CB=[cos(-Y) 0 -sin(-Y);0 1 0;sin(-Y) 0 cos(-Y)]
+disp(' ')
+
+C_NB=C_2CB*C_3NC                   
+
+C_3CN=C_3NC';
+C_2BC=C_2CB';
+C_BN=C_NB';
+
+Position_in_frame_N=r_vec__N
+r_N=C_BN*r_B
+disp('km')
+disp(' ')
+
+Velocity_in_frame_N=v_vec__N
+v_N=C_BN*v_B
+disp('km/s')
+disp(' ')
+
+
