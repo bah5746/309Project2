@@ -1,19 +1,14 @@
 
-v1 = [-1.2290;5.4891;-3.9842];
 t1 = 0;
 t2 = 5032;
 
-disp(r1);
+
 
 
 %% GROUP 8 / PROJECT 1 
 
-angleAlpha=85;
-angleLambda=41;
-i=deg2rad(angleAlpha);
-w=deg2rad(angleLambda);
-fprintf('\n alpha=%g deg.\n', angleAlpha);
-fprintf('\n lambda=%g deg.\n', angleLambda);
+
+%fprintf('\n lambda=%g deg.\n', angleLambda);
 
 syms C_1__AH(i) C_3__HP(omega) C_3__HP(Omega) r_vec__p1 r_vec__1 v_vec__p1 v_vec__1
 
@@ -29,8 +24,9 @@ v_1=[-1.2290;5.4891;-3.9842]
 disp('km/s')
 disp(' ')
 
-Part a) Finding Orbital elements a, e, i , O, w
-h_vec=r_1*v_1';
+%Part a) Finding Orbital elements a, e, i , O, w
+
+h_vec=cross(r_1',v_1')
 u=3.986*10^5;
 h=norm(h_vec)
 p=(h^2)/u
@@ -38,19 +34,23 @@ v=norm(v_1)
 r=norm(r_1)
 a=(-u/2)/(v^2/2-u/r)
 e=sqrt(1-p/a)
+i=acos(h_vec(3)/h)  
+n=([-h_vec(2) h_vec(1)])/(norm([-h_vec(2) h_vec(1)])) %(Kxh_vec)/|Kxh_vec|
+n(1)   %I*n<0
+O=atan(n(2)/n(1))+pi
+e_vec=cross(v_1',h_vec')/u-(r_1'/r)  %different answer for vector e!!
+e_vec(3)  % K*e<0
+w=acos((n(1)*e_vec(1)+n(2)*e_vec(2))/e)+pi
 
 
 
-
-
-
-Part b) DCM C_EP that converts from ECI to perifocal coordinates
+%Part b) DCM C_EP that converts from ECI to perifocal coordinates
 
 rotation_1=C_3__HP(Omega)
 C_3EA=[cos(O) sin(O) 0 ;-sin(O) cos(O) 0;0 0 1]
 disp(' ')
 
-rotation_2=C_1__AH(i)
+rotation_2=C_1__AH('i')
 C_1AH=[1 0 0 ;0 cos(i) sin(i);0 -sin(i) cos(i)]
 disp(' ')
 
@@ -72,3 +72,4 @@ Velocity_in_Perifocal_t1=v_vec__p1
 v_p1=C_EP*v_1
 disp('km/s')
 disp(' ')
+
