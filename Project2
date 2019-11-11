@@ -1,16 +1,13 @@
 
-t1 = 0;
-t2 = 5032;
-
-
-
-
-%% GROUP 8 / PROJECT 1 
+%% GROUP 6 / PROJECT 2 
 
 
 %fprintf('\n lambda=%g deg.\n', angleLambda);
 
-syms C_1__AH(i) C_3__HP(omega) C_3__HP(Omega) r_vec__p1 r_vec__1 v_vec__p1 v_vec__1
+syms C_1__AH(i) C_3__HP(omega) C_3__HP(Omega) 
+syms r_vec__p1 r_vec__1 v_vec__p1 v_vec__1
+syms theta_1 E_1 t_p E_2 theta_2
+syms r_vec__p2  v_vec__p2 r_vec__2 v_vec__2
 
 
 
@@ -30,23 +27,34 @@ h_vec=cross(r_1',v_1')
 u=3.986*10^5;
 h=norm(h_vec)
 p=(h^2)/u
-v=norm(v_1)
-r=norm(r_1)
-a=(-u/2)/(v^2/2-u/r)
+v1=norm(v_1)
+r1=norm(r_1)
+a=(-u/2)/(v1^2/2-u/r1)
+disp('meters')
+disp(' ')
 e=sqrt(1-p/a)
-i=acos(h_vec(3)/h)  
+disp(' ')
+i=acos(h_vec(3)/h)
+disp('radians')
+disp(' ')
 n=([-h_vec(2) h_vec(1)])/(norm([-h_vec(2) h_vec(1)])) %(Kxh_vec)/|Kxh_vec|
 n(1)   %I*n<0
-O=atan(n(2)/n(1))+pi
-e_vec=cross(v_1',h_vec')/u-(r_1'/r)  %different answer for vector e!!
+CapOmega=Omega
+O=atan(n(2)/n(1))+pi  %Capital Omega
+disp('radians')
+disp(' ')
+e_vec=cross(v_1',h_vec')/u-(r_1'/r1)  %different answer for vector e!!
 e_vec(3)  % K*e<0
-w=acos((n(1)*e_vec(1)+n(2)*e_vec(2))/e)+pi
+lowomega=omega
+w=acos((n(1)*e_vec(1)+n(2)*e_vec(2))/e)+pi %omega
+disp('radians')
+disp(' ')
 
 
 
 %Part b) DCM C_EP that converts from ECI to perifocal coordinates
 
-rotation_1=C_3__HP(Omega)
+rotation_1=C_3__HP('Omega')
 C_3EA=[cos(O) sin(O) 0 ;-sin(O) cos(O) 0;0 0 1]
 disp(' ')
 
@@ -63,6 +71,8 @@ C_EP=C_3HP*C_1AH*C_3EA
 C_PE=C_EP';
 
 
+%Part c) Position and velocity vectors in perifocal coordinates at t1
+
 Position_in_Perifocal_t1=r_vec__p1
 r_p1=C_EP*r_1
 disp('km')
@@ -70,6 +80,90 @@ disp(' ')
 
 Velocity_in_Perifocal_t1=v_vec__p1
 v_p1=C_EP*v_1
+disp('km/s')
+disp(' ')
+
+
+%Part d) true and eccentric anomalies at t1
+
+true_anomaly_t1=theta_1
+theta1=acos(((h^2/u)-r1)/(e*r1))
+disp('radians')
+disp(' ')
+
+eccentric_anomaly_t1=E_1
+E1=acos((r1-a)/(a*e))
+disp('radians')
+disp(' ')
+
+
+%Part e) Time of periapsis passage T0=tp
+
+T0=t_p
+t1=0;
+tp=-(E1-e*sin(E1))/(sqrt(u/a^3))-t1
+disp('seconds')
+disp(' ')
+
+
+%Part f) Eccentric and true anomalies at t2
+
+t2=5032;
+M=sqrt(u/a^3)*(t2-tp)
+Eold=M
+f=Eold-e*sin(Eold)-M
+fp=1-e*cos(Eold)
+Enew=Eold-(f/fp)
+A=Eold-Enew
+
+for i=1:100
+    if A<=10^(-6) && A>=-10^(-6)
+        break
+    end
+f=Eold-e*sin(Eold)-M
+fp=1-e*cos(Eold)
+Enew=Eold-(f/fp)
+A=Eold-Enew
+Eold=Enew
+end
+
+eccentric_anomaly_t2=E_2
+E2=Eold
+disp('radians')
+disp(' ')
+
+true_anomaly_t2=theta_2
+theta2=2*atan(sqrt((1+e)/(1-e))*tan(E2/2))+2*pi
+disp('radians')
+disp(' ')
+
+
+%Part g) position and velocity vectors at t2 in perifocal coordinates
+
+r2=p/(1+e*cos(theta2))
+Energy=-u/(2*a)
+v2=sqrt(2*(Energy+u/r2))
+
+Position_in_Perifocal_t2=r_vec__p2
+%r_p2=
+disp('km')
+disp(' ')
+
+Velocity_in_Perifocal_t2=v_vec__p2
+v_p2=[-sqrt(u/p)*sin(theta2);sqrt(u/p)*(e+cos(theta2));0]
+disp('km/s')
+disp(' ')
+
+
+%Part h) Position and velocity vectors at t2 in ECI coordinates
+
+Position_in_ECI_t2=r_vec__2
+%r_2=C_EP'*r_p2
+disp('km')
+disp(' ')
+
+Velocity_in_ECI_t2=v_vec__2
+v_2=C_EP'*v_p2
 disp('km/s')
 disp(' ')
 
