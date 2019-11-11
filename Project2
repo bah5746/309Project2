@@ -2,8 +2,6 @@
 %% GROUP 6 / PROJECT 2 
 
 
-%fprintf('\n lambda=%g deg.\n', angleLambda);
-
 syms C_1__AH(i) C_3__HP(omega) C_3__HP(Omega) 
 syms r_vec__p1 r_vec__1 v_vec__p1 v_vec__1
 syms theta_1 E_1 t_p E_2 theta_2
