@@ -1,3 +1,5 @@
+
+
 %% GROUP 6 / PROJECT 2 
 
 
@@ -5,7 +7,6 @@ syms C_1__AH(i) C_3__HP(omega) C_3__HP(Omega)
 syms r_vec__p1 r_vec__1 v_vec__p1 v_vec__1
 syms theta_1 E_1 t_p E_2 theta_2
 syms r_vec__p2  v_vec__p2 r_vec__2 v_vec__2
-
 
 
 Position_in_ECI_t1=r_vec__1
@@ -35,18 +36,17 @@ i=acos(h_vec(3)/h)
 disp('radians')
 disp(' ')
 n=([-h_vec(2) h_vec(1)])/(norm([-h_vec(2) h_vec(1)])) %(Kxh_vec)/|Kxh_vec|
-n(1)   %I*n<0
+Omegacheck=n(1)   %I*n<0
 CapOmega=Omega
 O=atan(n(2)/n(1))+pi  %Capital Omega
 disp('radians')
 disp(' ')
 e_vec=cross(v_1',h_vec')/u-(r_1'/r1)  %different answer for vector e!!
-e_vec(3)  % K*e<0
+omegacheck=e_vec(3)  % K*e<0
 lowomega=omega
 w=acos((n(1)*e_vec(1)+n(2)*e_vec(2))/e)+pi %omega
 disp('radians')
 disp(' ')
-
 
 
 %Part b) DCM C_EP that converts from ECI to perifocal coordinates
@@ -83,13 +83,14 @@ disp(' ')
 
 %Part d) true and eccentric anomalies at t1
 
+thetacheck=r_p1(1)*v_p1(1)+r_p1(2)*v_p1(2)+r_p1(3)*v_p1(3)  %r*v<0
 true_anomaly_t1=theta_1
-theta1=acos(((h^2/u)-r1)/(e*r1))
+theta1=-acos(((h^2/u)-r1)/(e*r1))+2*pi
 disp('radians')
 disp(' ')
 
 eccentric_anomaly_t1=E_1
-E1=acos((r1-a)/(a*e))
+E1=2*atan(sqrt((1-e)/(1+e))*tan(theta1/2))+2*pi
 disp('radians')
 disp(' ')
 
@@ -121,16 +122,19 @@ f=Eold-e*sin(Eold)-M
 fp=1-e*cos(Eold)
 Enew=Eold-(f/fp)
 A=Eold-Enew
+sprintf('%0.8f', A)
 Eold=Enew
+sprintf('%0.8f', Enew)
+
 end
 
 eccentric_anomaly_t2=E_2
-E2=Eold
+E2=Eold-2*pi
 disp('radians')
 disp(' ')
 
 true_anomaly_t2=theta_2
-theta2=2*atan(sqrt((1+e)/(1-e))*tan(E2/2))+2*pi
+theta2=2*atan(sqrt((1+e)/(1-e))*tan(E2/2))
 disp('radians')
 disp(' ')
 
@@ -145,7 +149,7 @@ e2=C_PE*e_vec'
 
 
 Position_in_Perifocal_t2=r_vec__p2
-%r_p2=
+r_p2=[r2*cos(theta2);r2*sin(theta2);0]
 disp('km')
 disp(' ')
 
@@ -158,11 +162,11 @@ disp(' ')
 %Part h) Position and velocity vectors at t2 in ECI coordinates
 
 Position_in_ECI_t2=r_vec__2
-%r_2=C_EP'*r_p2
+r_2=C_PE*r_p2
 disp('km')
 disp(' ')
 
 Velocity_in_ECI_t2=v_vec__2
-v_2=C_EP'*v_p2
+v_2=C_PE*v_p2
 disp('km/s')
 disp(' ')
