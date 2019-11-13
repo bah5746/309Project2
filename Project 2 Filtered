@@ -1,31 +1,31 @@
-
+% Bailey Hentz, John Quinn, Liam McGregor, Zackary Long
 %% GROUP 6 / PROJECT 2 
 
 
 syms C_1__AH(i) C_3__HP(omega) C_3__HP(Omega) 
-syms r_vec__p1 r_vec__1 v_vec__p1 v_vec__1
+syms r_vec_1__p r_vec_1__E v_vec_1__p v_vec_1__E
 syms theta_1 E_1 t_p E_2 theta_2
-syms r_vec__p2  v_vec__p2 r_vec__2 v_vec__2
+syms r_vec_2__p  v_vec_2__p r_vec_2__E v_vec_2__E
 
 
-Position_in_ECI_t1=r_vec__1
+Position_in_ECI_t1=r_vec_1__E
 r_1=[9187.7;-3016.2;-1483.1]
 disp('km')
 disp(' ')
 
-Velocity_in_ECI_t1=v_vec__1
+Velocity_in_ECI_t1=v_vec_1__E
 v_1=[-1.2290;5.4891;-3.9842]
 disp('km/s')
 disp(' ')
 
 %Part a) Finding Orbital elements a, e, i , O, w
 
-h_vec=cross(r_1',v_1')
+h_vec=cross(r_1',v_1');
 u=3.986*10^5;
-h=norm(h_vec)
-p=(h^2)/u
-v1=norm(v_1)
-r1=norm(r_1)
+h=norm(h_vec);
+p=(h^2)/u;
+v1=norm(v_1);
+r1=norm(r_1);
 a=(-u/2)/(v1^2/2-u/r1)
 disp('meters')
 disp(' ')
@@ -34,15 +34,15 @@ disp(' ')
 i=acos(h_vec(3)/h)
 disp('radians')
 disp(' ')
-n=([-h_vec(2) h_vec(1)])/(norm([-h_vec(2) h_vec(1)])) %(Kxh_vec)/|Kxh_vec|
-Omegacheck=n(1)   %I*n<0
-CapOmega=Omega
+n=([-h_vec(2) h_vec(1)])/(norm([-h_vec(2) h_vec(1)])); %(Kxh_vec)/|Kxh_vec|
+Omegacheck=n(1);   %I*n<0
+CapOmega_O=Omega
 O=atan(n(2)/n(1))+pi  %Capital Omega
 disp('radians')
 disp(' ')
-e_vec=cross(v_1',h_vec')/u-(r_1'/r1)  %different answer for vector e!!
-omegacheck=e_vec(3)  % K*e<0
-lowomega=omega
+e_vec=cross(v_1',h_vec')/u-(r_1'/r1);
+omegacheck=e_vec(3);  % K*e<0
+lowomega_w=omega
 w=acos((n(1)*e_vec(1)+n(2)*e_vec(2))/e)+pi %omega
 disp('radians')
 disp(' ')
@@ -69,12 +69,12 @@ C_PE=C_EP';
 
 %Part c) Position and velocity vectors in perifocal coordinates at t1
 
-Position_in_Perifocal_t1=r_vec__p1
+Position_in_Perifocal_t1=r_vec_1__p
 r_p1=C_EP*r_1
 disp('km')
 disp(' ')
 
-Velocity_in_Perifocal_t1=v_vec__p1
+Velocity_in_Perifocal_t1=v_vec_1__p
 v_p1=C_EP*v_1
 disp('km/s')
 disp(' ')
@@ -82,7 +82,7 @@ disp(' ')
 
 %Part d) true and eccentric anomalies at t1
 
-thetacheck=r_p1(1)*v_p1(1)+r_p1(2)*v_p1(2)+r_p1(3)*v_p1(3)  %r*v<0
+thetacheck=r_p1(1)*v_p1(1)+r_p1(2)*v_p1(2)+r_p1(3)*v_p1(3);  %r*v<0
 true_anomaly_t1=theta_1
 theta1=-acos(((h^2/u)-r1)/(e*r1))+2*pi
 disp('radians')
@@ -97,7 +97,9 @@ disp(' ')
 %Part e) Time of periapsis passage T0=tp
 
 T0=t_p
-t1=0;
+t1=0
+disp('seconds')
+disp(' ')
 tp=-(E1-e*sin(E1))/(sqrt(u/a^3))-t1
 disp('seconds')
 disp(' ')
@@ -105,25 +107,27 @@ disp(' ')
 
 %Part f) Eccentric and true anomalies at t2
 
-t2=5032;
-M=sqrt(u/a^3)*(t2-tp)
-Eold=M
-f=Eold-e*sin(Eold)-M
-fp=1-e*cos(Eold)
-Enew=Eold-(f/fp)
-A=Eold-Enew
+t2=5032
+disp('seconds')
+disp(' ')
+M=sqrt(u/a^3)*(t2-tp);
+Eold=M;
+f=Eold-e*sin(Eold)-M;
+fp=1-e*cos(Eold);
+Enew=Eold-(f/fp);
+A=Eold-Enew;
 
 for i=1:100
     if A<=10^(-6) && A>=-10^(-6)
         break
     end
-f=Eold-e*sin(Eold)-M
-fp=1-e*cos(Eold)
-Enew=Eold-(f/fp)
-A=Eold-Enew
-sprintf('%0.8f', A)
-Eold=Enew
-sprintf('%0.8f', Enew)
+f=Eold-e*sin(Eold)-M;
+fp=1-e*cos(Eold);
+Enew=Eold-(f/fp);
+A=Eold-Enew;
+sprintf('%0.8f', A);
+Eold=Enew;
+sprintf('%0.8f', Enew);
 
 end
 
@@ -140,19 +144,19 @@ disp(' ')
 
 %Part g) position and velocity vectors at t2 in perifocal coordinates
 
-r2=p/(1+e*cos(theta2))
-Energy=-u/(2*a)
-v2=sqrt(2*(Energy+u/r2))
-h2=C_PE*h_vec'
-e2=C_PE*e_vec'
+r2=p/(1+e*cos(theta2));
+Energy=-u/(2*a);
+v2=sqrt(2*(Energy+u/r2));
+h2=C_PE*h_vec';
+e2=C_PE*e_vec';
 
 
-Position_in_Perifocal_t2=r_vec__p2
+Position_in_Perifocal_t2=r_vec_2__p
 r_p2=[r2*cos(theta2);r2*sin(theta2);0]
 disp('km')
 disp(' ')
 
-Velocity_in_Perifocal_t2=v_vec__p2
+Velocity_in_Perifocal_t2=v_vec_2__p
 v_p2=[-sqrt(u/p)*sin(theta2);sqrt(u/p)*(e+cos(theta2));0]
 disp('km/s')
 disp(' ')
@@ -160,12 +164,12 @@ disp(' ')
 
 %Part h) Position and velocity vectors at t2 in ECI coordinates
 
-Position_in_ECI_t2=r_vec__2
+Position_in_ECI_t2=r_vec_2__E
 r_2=C_PE*r_p2
 disp('km')
 disp(' ')
 
-Velocity_in_ECI_t2=v_vec__2
+Velocity_in_ECI_t2=v_vec_2__E
 v_2=C_PE*v_p2
 disp('km/s')
 disp(' ')
